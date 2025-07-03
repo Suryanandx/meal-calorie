@@ -1,6 +1,7 @@
 import axios from "axios";
 import fuzzysort from "fuzzysort";
 import { USDAFoodItem } from "../types/usda";
+import { logger } from "../utils/logger";
 
 const USDA_API_URL = "https://api.nal.usda.gov/fdc/v1/foods/search";
 
@@ -14,39 +15,60 @@ export class CalorieService implements ICalorieService {
   public async getCalories(dish: string): Promise<number | null> {
     const normalizedDish = dish.trim().toLowerCase();
 
-    // Step 1: Check cache
+    if (!normalizedDish) {
+      logger.warn("Dish name is empty or invalid");
+      return null;
+    }
+
     if (this.cache.has(normalizedDish)) {
+      logger.debug({ dish: normalizedDish }, "Returning calories from cache");
       return this.cache.get(normalizedDish)!;
     }
 
     try {
-      const foods = await this.fetchUSDAFoods(dish);
-      if (!foods.length) return null;
+      const foods = await this.fetchUSDAFoods(normalizedDish);
+      if (!foods.length) {
+        logger.info({ dish: normalizedDish }, "No USDA foods found");
+        return null;
+      }
 
-      const bestMatch = this.findBestMatch(dish, foods);
-      if (!bestMatch) return null;
+      const bestMatch = this.findBestMatch(normalizedDish, foods);
+      if (!bestMatch) {
+        logger.info({ dish: normalizedDish }, "No fuzzy match found");
+        return null;
+      }
 
       const calories = this.extractCalories(bestMatch);
-      if (calories === null) return null;
+      if (calories === null) {
+        logger.warn(
+          { dish: normalizedDish },
+          "Calories not found in nutrient list"
+        );
+        return null;
+      }
 
       this.cache.set(normalizedDish, calories);
       return calories;
     } catch (err) {
-      console.error("🔴 CalorieService error:", err);
+      logger.error({ err, dish }, "Error in CalorieService");
       return null;
     }
   }
 
   private async fetchUSDAFoods(query: string): Promise<USDAFoodItem[]> {
-    const response = await axios.get(USDA_API_URL, {
-      params: {
-        query,
-        api_key: process.env.USDA_API_KEY,
-        pageSize: 10,
-      },
-    });
-
-    return response.data?.foods || [];
+    try {
+      const response = await axios.get(USDA_API_URL, {
+        params: {
+          query,
+          api_key: process.env.USDA_API_KEY,
+          pageSize: 10,
+        },
+      });
+      return response.data?.foods || [];
+    } catch (err) {
+      logger.error({ err, query }, "Failed to fetch foods from USDA API");
+      throw err;
+    }
   }
 
   private findBestMatch(
@@ -56,7 +78,6 @@ export class CalorieService implements ICalorieService {
     const matches = fuzzysort.go<USDAFoodItem>(dish, foods, {
       key: "description",
     });
-
     return matches.length > 0 ? matches[0].obj : null;
   }
 
@@ -64,7 +85,6 @@ export class CalorieService implements ICalorieService {
     const energy = item.foodNutrients.find(
       (n) => n.nutrientName === "Energy" && n.unitName === "KCAL"
     );
-
     return energy?.value ?? null;
   }
 }
