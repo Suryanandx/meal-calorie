@@ -142,13 +142,6 @@ Displays total and per-serving calories in UI.
 * Axios interceptor injects token into headers
 * Protected routes redirect unauthenticated users
 
----
-
-## 🔄 API Reference
-
-Backend: [Meal Calorie Tracker API](https://github.com/yourname/meal-calorie-api)
-
----
 
 ## 🧠 Developer Tips
 
