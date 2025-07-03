@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "dish_name": "grilled chicken salad",
+    "servings": 1,
+    "calories_per_serving": 285,
+    "total_calories": 285,
+    "source": "USDA (mock)",
+    "date": "2024-01-15T12:30:00Z"
+  },
+  {
+    "id": "2",
+    "dish_name": "pasta with marinara sauce",
+    "servings": 1.5,
+    "calories_per_serving": 220,
+    "total_calories": 330,
+    "source": "USDA (mock)",
+    "date": "2024-01-15T18:45:00Z"
+  },
+  {
+    "id": "3",
+    "dish_name": "banana smoothie",
+    "servings": 1,
+    "calories_per_serving": 150,
+    "total_calories": 150,
+    "source": "USDA (mock)",
+    "date": "2024-01-16T08:15:00Z"
+  }
+]
