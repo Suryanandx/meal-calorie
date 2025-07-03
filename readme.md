@@ -1,20 +1,20 @@
 # 🛠️ Meal Calorie Tracker – Getting Started
 
-This project is split into two folders:
+A full-stack calorie tracking app that lets users estimate calories using the USDA FoodData Central API.
 
-- **Frontend:** `calorie-tracker` – built with React + TypeScript
-- **Backend:** `meal-calorie-backend` – built with Node.js + Express + MongoDB
+- **Frontend:** [`frontend`](https://meal-calorie.vercel.app) – React + TypeScript (deployed on Vercel)
+- **Backend:** [`backend`](https://meal-calorie-production.up.railway.app) – Node.js + Express + MongoDB (deployed on Railway)
 
 ---
 
 ## 🔧 Prerequisites
 
-Make sure you have the following installed:
+Ensure you have the following installed:
 
 - Node.js (v18+ recommended)
 - npm or yarn
-- MongoDB (local or Atlas)
-- `.env` file for each project
+- MongoDB (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+- A [USDA API Key](https://fdc.nal.usda.gov/api-key-signup.html)
 
 ---
 
@@ -22,66 +22,113 @@ Make sure you have the following installed:
 
 ```
 
-.
-├── calorie-tracker         # Frontend (React/Next.js)
-└── meal-calorie-backend    # Backend (Express, MongoDB)
+meal-calorie/
+├── frontend         # React + TypeScript frontend
+└── backend          # Express + MongoDB backend
 
 ````
+
+---
+
+## 🌐 Live URLs
+
+- **Frontend** → [`https://meal-calorie.vercel.app`](https://meal-calorie.vercel.app)
+- **Backend** → [`https://meal-calorie-production.up.railway.app`](https://meal-calorie-production.up.railway.app)
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### ⬇️ Clone the Repo
+### 1️⃣ Clone the Repo
 
 ```bash
 git clone https://github.com/Suryanandx/meal-calorie.git
-cd meal-calorie-tracker
+cd meal-calorie
 ````
 
 ---
 
-### 🔙 Backend Setup
+### 2️⃣ Backend Setup
 
 ```bash
-cd meal-calorie-backend
-cp .env.example .env         # fill in your MongoDB URI and USDA API key
+cd backend
+cp .env.example .env           # Fill in Mongo URI, JWT secret, and USDA key
 npm install
-npm run dev
+npm run dev                    # Starts on http://localhost:8000
 ```
 
-API is served at `http://localhost:5000/api`
+#### ✅ Sample `.env` for Backend
+
+```env
+PORT=8000
+MONGO_URI=mongodb://localhost:27017/meal-calorie-db
+JWT_SECRET=your_jwt_secret
+USDA_API_KEY=your_usda_api_key
+```
 
 ---
 
-### 🎯 Frontend Setup
+### 3️⃣ Frontend Setup
 
 ```bash
-cd calorie-tracker
-cp .env.example .env         # point NEXT_PUBLIC_API_URL to backend
+cd frontend
+cp .env.example .env           # Set your API base URL
 npm install
-npm run dev
+npm run dev                    # Starts on http://localhost:3000
 ```
 
-Frontend runs at `http://localhost:3000`
+#### ✅ Sample `.env` for Frontend
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
+
+> For production:
+>
+> `NEXT_PUBLIC_API_BASE_URL=https://meal-calorie-production.up.railway.app`
 
 ---
 
-## 🔐 Auth Routes
+## 🏗️ Production Build
 
-* POST `/auth/register`
-* POST `/auth/login`
+### 🔧 Backend
+
+```bash
+cd backend
+npm run build                  # TypeScript → dist/
+node dist/server.js            # Run production server
+```
+
+### 🌐 Frontend
+
+```bash
+cd frontend
+npm run build
+npm start                      # Serves optimized frontend
+```
 
 ---
 
-## 🍽️ Calories Route
+## 🔐 API Routes
 
-* POST `/get-calories` (requires Bearer Token)
+### ✅ Auth
+
+* `POST /auth/register` → Register new user
+* `POST /auth/login` → Login and receive JWT
+
+### ✅ Calories
+
+* `POST /get-calories`
+  Headers: `Authorization: Bearer <token>`
+  Body: `{ "foodItem": "Banana" }`
 
 ---
 
 ## 📌 Notes
 
-* Both apps are modular and OOP-based.
-* All validation is handled via Zod.
-* You must add a valid `USDA_API_KEY` in the backend `.env`.
+* Modular, scalable architecture with OOP and validation
+* Uses **Zod** for request validation
+* CORS enabled (open for dev)
+* Fully deployable via **Railway** + **Vercel**
+
+
