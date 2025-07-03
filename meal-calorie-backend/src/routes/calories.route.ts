@@ -1,18 +1,19 @@
 import { Router } from "express";
-import { getCalorieInfo } from "../controllers/calories.controller";
-import { authenticate } from "../middlewares/auth.middleware";
-import { validateBody } from "../middlewares/validate.middleware";
+import { CalorieController } from "../controllers/calories.controller";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { ValidationMiddleware } from "../middlewares/validate.middleware";
 import { calorieRequestSchema } from "../validators/calories.schema";
-import { userRateLimiter } from "../middlewares/rateLimit.middleware";
+import { RateLimitMiddleware } from "../middlewares/rateLimit.middleware";
 
 const router = Router();
+const controller = new CalorieController();
 
 router.post(
-    '/get-calories',
-    authenticate,
-    userRateLimiter, 
-    validateBody(calorieRequestSchema),
-    getCalorieInfo
-  );
+  "/get-calories",
+  AuthMiddleware.authenticate,
+  RateLimitMiddleware.userRateLimiter,
+  ValidationMiddleware.validateBody(calorieRequestSchema),
+  controller.getCalorieInfo.bind(controller)
+);
 
 export default router;
