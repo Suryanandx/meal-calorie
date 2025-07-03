@@ -44,8 +44,8 @@ src/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourname/meal-calorie-api.git
-cd meal-calorie-api
+git clone https://github.com/Suryanandx/meal-calorie
+cd backend
 npm install
 ````
 
