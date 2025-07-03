@@ -54,8 +54,8 @@ src/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourname/meal-calorie-frontend.git
-cd meal-calorie-frontend
+git clone [https://github.com/yourname/meal-calorie-frontend.git](https://github.com/Suryanandx/meal-calorie)
+cd frontend
 npm install
 ````
 
@@ -64,7 +64,7 @@ npm install
 Create a `.env.local` file based on this:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
 Update the base URL to point to your hosted backend when deploying.
