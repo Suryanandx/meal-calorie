@@ -9,12 +9,13 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: '*', 
-  })
-);
+// ✅ Allow all origins (public API)
+app.use(cors());
 
+// Optional: allow preflight across all routes
+app.options('*', cors());
+
+// JSON parsing middleware
 app.use(express.json());
 
 // Routes
